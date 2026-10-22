@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#176b42">
+  <meta name="description" content="Petani-Cabai, asisten digital untuk membantu budidaya cabai.">
+
+  <title>Petani-Cabai | Pertanian Cerdas</title>
+
+  <style>
+    :root {
+      --green: #176b42;
+      --green-dark: #104b30;
+      --green-light: #e8f5ec;
+      --red: #e94343;
+      --bg: #f5f8f5;
+      --white: #ffffff;
+      --text: #24352b;
+      --muted: #748178;
+      --border: #e5ebe6;
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .header {
+      background: var(--green);
+      color: white;
+      padding: 22px 18px 25px;
+      border-radius: 0 0 25px 25px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .logo {
+      width: 46px;
+      height: 46px;
+      background: white;
+      color: var(--green);
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      font-size: 27px;
+    }
+
+    .brand h1 {
+      font-size: 19px;
+      margin: 0;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      font-size: 12px;
+      opacity: .85;
+    }
+
+    .welcome {
+      margin-top: 24px;
+    }
+
+    .welcome h2 {
+      font-size: 23px;
+      margin: 0 0 5px;
+    }
+
+    .welcome p {
+      margin: 0;
+      opacity: .9;
+      font-size: 13px;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: auto;
+      padding: 18px 15px 100px;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin: 22px 0 12px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .section-title span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 11px;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 15px;
+      box-shadow: 0 3px 12px rgba(20, 60, 35, .035);
+      min-width: 0;
+    }
+
+    .stat-icon {
+      font-size: 23px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 9px;
+    }
+
+    .stat-value {
+      font-size: 21px;
+      font-weight: 700;
+      margin-top: 3px;
+      overflow-wrap: anywhere;
+    }
+
+    .green {
+      color: var(--green);
+    }
+
+    .red {
+      color: var(--red);
+    }
+
+    .banner {
+      margin-top: 16px;
+      padding: 17px;
+      background: var(--green-light);
+      border: 1px solid #d5e9da;
+      border-radius: var(--radius);
+    }
+
+    .banner h3 {
+      margin: 0 0 6px;
+      color: var(--green-dark);
+      font-size: 15px;
+    }
+
+    .banner p {
+      margin: 0;
+      color: #476251;
+      font-size: 13px;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .menu-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 15px 5px;
+      text-align: center;
+      color: var(--text);
+      min-height: 100px;
+    }
+
+    .menu-item:active {
+      background: var(--green-light);
+    }
+
+    .menu-item .icon {
+      display: block;
+      font-size: 25px;
+      margin-bottom: 7px;
+    }
+
+    .menu-item strong {
+      display: block;
+      font-size: 11px;
+    }
+
+    .menu-item small {
+      color: var(--muted);
+      display: block;
+      font-size: 10px;
+      margin-top: 3px;
+    }
+
+    .task {
+      display: flex;
+      gap: 11px;
+      align-items: flex-start;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .task:last-child {
+      border-bottom: none;
+    }
+
+    .task input {
+      width: 19px;
+      height: 19px;
+      accent-color: var(--green);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .task strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .task p {
+      margin: 3px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    .panel h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .panel p {
+      color: #59685e;
+    }
+
+    .form-group {
+      margin: 15px 0;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d9e2db;
+      border-radius: 10px;
+      background: white;
+      color: var(--text);
+    }
+
+    .form-group textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .btn {
+      border: none;
+      background: var(--green);
+      color: white;
+      border-radius: 11px;
+      padding: 12px 16px;
+      font-weight: 600;
+      width: 100%;
+      margin-top: 5px;
+    }
+
+    .btn-secondary {
+      background: var(--green-light);
+      color: var(--green-dark);
+    }
+
+    .item-row {
+      border-bottom: 1px solid var(--border);
+      padding: 13px 0;
+    }
+
+    .item-row:last-child {
+      border-bottom: none;
+    }
+
+    .item-row strong {
+      display: block;
+    }
+
+    .item-row small {
+      color: var(--muted);
+      display: block;
+      margin-top: 4px;
+    }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 20px 5px;
+      font-size: 13px;
+    }
+
+    .notice {
+      padding: 12px;
+      background: #fff6df;
+      border-radius: 11px;
+      color: #74571a;
+      font-size: 12px;
+      margin: 12px 0;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-around;
+      background: white;
+      border-top: 1px solid var(--border);
+      padding: 8px 3px calc(8px + env(safe-area-inset-bottom));
+      z-index: 10;
+    }
+
+    .nav-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 10px;
+      padding: 5px 1px;
+    }
+
+    .nav-btn span {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 3px;
+    }
+
+    .nav-btn.active {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 25px;
+    }
+
+    @media (min-width: 600px) {
+      .stats {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .menu-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .header {
+        padding-left: max(22px, calc((100% - 720px) / 2));
+        padding-right: max(22px, calc((100% - 720px) / 2));
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="brand">
+    <div class="logo">🌶️</div>
+    <div>
+      <h1>PETANI-CABAI</h1>
+      <p>Asisten Cerdas Budidaya Cabai</p>
+    </div>
+  </div>
+
+  <div class="welcome">
+    <h2>Halo, Petani! 🌱</h2>
+    <p>Rawat tanaman hari ini, siapkan panen yang lebih baik.</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- DASHBOARD -->
+  <section class="page active" id="dashboard">
+    <div class="section-title">
+      <h2>Ringkasan Kebun</h2>
+      <span id="today"></span>
+    </div>
+
+    <div class="stats">
+      <div class="card">
+        <div class="stat-icon">🌱</div>
+        <div class="stat-label">Jumlah tanaman</div>
+        <div class="stat-value green" id="plantCount">0</div>
+      </div>
+
+      <div class="card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-label">Catatan kebun</div>
+        <div class="stat-value" id="recordCount">0</div>
+      </div>
+
+      <div class="card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-label">Total pengeluaran</div>
+        <div class="stat-value red" id="expenseTotal">Rp0</div>
+      </div>
+
+      <div class="card">
+        <div class="stat-icon">🧺</div>
+        <div class="stat-label">Hasil panen</div>
+        <div class="stat-value green" id="harvestTotal">0 kg</div>
+      </div>
+    </div>
+
+    <div class="banner">
+      <h3>🌿 Tips Pertanian Hari Ini</h3>
+      <p>Periksa kondisi daun, batang, dan permukaan tanah secara rutin. Catat perubahan yang terlihat agar masalah tanaman lebih mudah ditelusuri.</p>
+    </div>
+
+    <div class="section-title">
+      <h2>Menu Pertanian</h2>
+      <span>Pilih fitur</span>
+    </div>
+
+    <div class="menu-grid">
+      <button class="menu-item" onclick="showPage('budidaya')">
+        <span class="icon">🌱</span>
+        <strong>Panduan Tanam</strong>
+        <small>Benih sampai panen</small>
+      </button>
+
+      <button class="menu-item" onclick="showPage('kebun')">
+        <span class="icon">🌾</span>
+        <strong>Kebun Saya</strong>
+        <small>Data tanaman</small>
+      </button>
+
+      <button class="menu-item" onclick="showPage('diagnosis')">
+        <span class="icon">🔬</span>
+        <strong>Diagnosis</strong>
+        <small>Periksa gejala</small>
+      </button>
+
+      <button class="menu-item" onclick="showPage('perawatan')">
+        <span class="icon">💧</span>
+        <strong>Perawatan</strong>
+        <small>Catatan kegiatan</small>
+      </button>
+
+      <button class="menu-item" onclick="showPage('keuangan')">
+        <span class="icon">💰</span>
+        <strong>Keuangan</strong>
+        <small>Biaya kebun</small>
+      </button>
+
+      <button class="menu-item" onclick="showPage('panen')">
+        <span class="icon">🧺</span>
+        <strong>Hasil Panen</strong>
+        <small>Catatan produksi</small>
+      </button>
+    </div>
+
+    <div class="section-title">
+      <h2>Pemeriksaan Kebun</h2>
+      <span>Daftar kegiatan</span>
+    </div>
+
+    <div class="card">
+      <label class="task">
+        <input type="checkbox">
+        <div>
+          <strong>Periksa daun dan batang</strong>
+          <p>Amati perubahan warna, bercak, atau kerusakan.</p>
+        </div>
+      </label>
+
+      <label class="task">
+        <input type="checkbox">
+        <div>
+          <strong>Periksa kelembapan tanah</strong>
+          <p>Sesuaikan pengairan dengan kondisi tanah dan cuaca.</p>
+        </div>
+      </label>
+
+      <label class="task">
+        <input type="checkbox">
+        <div>
+          <strong>Periksa hama</strong>
+          <p>Amati bagian bawah daun dan pucuk tanaman.</p>
+        </div>
+      </label>
+    </div>
+
+    <p class="footer">PETANI-CABAI · Tumbuh Bersama Petani 🌱</p>
+  </section>
+
+  <!-- BUDIDAYA -->
+  <section class="page" id="budidaya">
+    <div class="section-title">
+      <h2>🌱 Panduan Budidaya Cabai</h2>
+    </div>
+
+    <div class="panel">
+      <h3>1. Persiapan benih</h3>
+      <p>Pilih benih bermutu dan varietas yang sesuai dengan lingkungan serta tujuan budidaya. Perhatikan informasi pada kemasan benih.</p>
+    </div>
+
+    <div class="panel">
+      <h3>2. Persemaian</h3>
+      <p>Gunakan media semai yang bersih dan memiliki drainase baik. Jaga kelembapan media tanpa membuatnya terlalu basah.</p>
+    </div>
+
+    <div class="panel">
+      <h3>3. Persiapan lahan</h3>
+      <p>Pastikan lahan memiliki drainase yang baik. Sesuaikan pengolahan tanah dan pemupukan dasar dengan kondisi lahan.</p>
+    </div>
+
+    <div class="panel">
+      <h3>4. Penanaman</h3>
+      <p>Pindahkan bibit yang sehat dan cukup kuat. Sesuaikan jarak tanam dengan varietas, sistem budidaya, dan rekomendasi setempat.</p>
+    </div>
+
+    <div class="panel">
+      <h3>5. Perawatan</h3>
+      <p>Pantau pertumbuhan, kelembapan tanah, gulma, hama, dan penyakit. Berikan air serta nutrisi sesuai kebutuhan tanaman.</p>
+    </div>
+
+    <div class="panel">
+      <h3>6. Pembungaan dan pembuahan</h3>
+      <p>Amati perkembangan bunga dan buah. Catat kerontokan atau perubahan kondisi tanaman untuk membantu evaluasi perawatan.</p>
+    </div>
+
+    <div class="panel">
+      <h3>7. Panen</h3>
+      <p>Panen sesuai tingkat kematangan dan tujuan pasar. Catat berat panen, kualitas buah, serta harga jual.</p>
+    </div>
+
+    <div class="notice">
+      Panduan ini merupakan informasi dasar. Waktu dan dosis perawatan harus disesuaikan dengan varietas, kondisi kebun, dan rekomendasi budidaya yang tepercaya.
+    </div>
+  </section>
+
+  <!-- KEBUN -->
+  <section class="page" id="kebun">
+    <div class="section-title">
+      <h2>🌾 Data Kebun Saya</h2>
+    </div>
+
+    <div class="panel">
+      <h3>Tambah Data Kebun</h3>
+
+      <form id="plantForm">
+        <div class="form-group">
+          <label for="farmName">Nama kebun atau petak</label>
+          <input id="farmName" required placeholder="Contoh: Petak Utara">
+        </div>
+
+        <div class="form-group">
+          <label for="variety">Jenis cabai</label>
+          <select id="variety">
+            <option>Cabai merah keriting</option>
+            <option>Cabai rawit</option>
+            <option>Cabai merah besar</option>
+            <option>Cabai hijau</option>
+            <option>Lainnya</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="plantDate">Tanggal tanam</label>
+          <input type="date" id="plantDate" required>
+        </div>
+
+        <div class="form-group">
+          <label for="plantAmount">Jumlah tanaman</label>
+          <input type="number" id="plantAmount" min="0" required placeholder="Contoh: 500">
+        </div>
+
+        <button class="btn" type="submit">Simpan Data Kebun</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h3>Daftar Kebun</h3>
+      <div id="farmList" class="empty">Belum ada data kebun.</div>
+    </div>
+  </section>
+
+  <!-- PERAWATAN -->
+  <section class="page" id="perawatan">
+    <div class="section-title">
+      <h2>💧 Catatan Perawatan</h2>
+    </div>
+
+    <div class="panel">
+      <h3>Tambah Catatan</h3>
+
+      <form id="careForm">
+        <div class="form-group">
+          <label for="careType">Jenis kegiatan</label>
+          <select id="careType">
+            <option>Penyiraman</option>
+            <option>Pemupukan</option>
+            <option>Pemeriksaan hama</option>
+            <option>Pemeriksaan penyakit</option>
+            <option>Penyiangan gulma</option>
+            <option>Pemasangan ajir</option>
+            <option>Kegiatan lainnya</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="careDate">Tanggal kegiatan</label>
+          <input type="date" id="careDate" required>
+        </div>
+
+        <div class="form-group">
+          <label for="careNotes">Keterangan</label>
+          <textarea id="careNotes" required placeholder="Tuliskan kegiatan dan kondisi tanaman..."></textarea>
+        </div>
+
+        <button class="btn" type="submit">Simpan Catatan</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h3>Riwayat Perawatan</h3>
+      <div id="careList" class="empty">Belum ada catatan perawatan.</div>
+    </div>
+  </section>
+
+  <!-- DIAGNOSIS -->
+  <section class="page" id="diagnosis">
+    <div class="section-title">
+      <h2>🔬 Pemeriksaan Tanaman</h2>
+    </div>
+
+    <div class="panel">
+      <h3>Catat Gejala Tanaman</h3>
+
+      <p>Masukkan gejala yang kamu amati untuk menyimpan laporan pemeriksaan.</p>
+
+      <form id="diagnosisForm">
+        <div class="form-group">
+          <label for="plantPart">Bagian tanaman</label>
+          <select id="plantPart">
+            <option>Daun</option>
+            <option>Batang</option>
+            <option>Akar</option>
+            <option>Bunga</option>
+            <option>Buah</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="symptom">Gejala yang terlihat</label>
+          <select id="symptom">
+            <option>Daun menguning</option>
+            <option>Bercak pada daun</option>
+            <option>Daun menggulung</option>
+            <option>Tanaman layu</option>
+            <option>Batang berubah warna</option>
+            <option>Bunga rontok</option>
+            <option>Buah membusuk</option>
+            <option>Gejala lainnya</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="symptomNotes">Keterangan tambahan</label>
+          <textarea id="symptomNotes" placeholder="Sejak kapan gejala muncul? Apakah menyebar?"></textarea>
+        </div>
+
+        <button class="btn" type="submit">Simpan Pemeriksaan</button>
+      </form>
+    </div>
+
+    <div class="notice">
+      Fitur ini saat ini menyimpan gejala yang kamu laporkan. Fitur ini belum menganalisis foto atau menentukan diagnosis penyakit secara otomatis.
+    </div>
+
+    <div class="panel">
+      <h3>Riwayat Pemeriksaan</h3>
+      <div id="diagnosisList" class="empty">Belum ada pemeriksaan.</div>
+    </div>
+  </section>
+
+  <!-- KEUANGAN -->
+  <section class="page" id="keuangan">
+    <div class="section-title">
+      <h2>💰 Keuangan Kebun</h2>
+    </div>
+
+    <div class="panel">
+      <h3>Tambah Pengeluaran</h3>
+
+      <form id="expenseForm">
+        <div class="form-group">
+          <label for="expenseName">Nama pengeluaran</label>
+          <input id="expenseName" required placeholder="Contoh: Pembelian pupuk">
+        </div>
+
+        <div class="form-group">
+          <label for="expenseAmount">Jumlah biaya (rupiah)</label>
+          <input id="expenseAmount" type="number" min="1" required placeholder="Contoh: 150000">
+        </div>
+
+        <div class="form-group">
+          <label for="expenseDate">Tanggal</label>
+          <input id="expenseDate" type="date" required>
+        </div>
+
+        <button class="btn" type="submit">Simpan Pengeluaran</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h3>Riwayat Pengeluaran</h3>
+      <div id="expenseList" class="empty">Belum ada pengeluaran.</div>
+    </div>
+  </section>
+
+  <!-- PANEN -->
+  <section class="page" id="panen">
+    <div class="section-title">
+      <h2>🧺 Hasil Panen</h2>
+    </div>
+
+    <div class="panel">
+      <h3>Catat Hasil Panen</h3>
+
+      <form id="harvestForm">
+        <div class="form-group">
+          <label for="harvestDate">Tanggal panen</label>
+          <input type="date" id="harvestDate" required>
+        </div>
+
+        <div class="form-group">
+          <label for="harvestWeight">Berat panen (kg)</label>
+          <input id="harvestWeight" type="number" min="0.01" step="0.01" required placeholder="Contoh: 25">
+        </div>
+
+        <div class="form-group">
+          <label for="harvestPrice">Harga jual per kg (rupiah)</label>
+          <input id="harvestPrice" type="number" min="0" required placeholder="Contoh: 30000">
+        </div>
+
+        <button class="btn" type="submit">Simpan Hasil Panen</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h3>Riwayat Panen</h3>
+      <div id="harvestList" class="empty">Belum ada hasil panen.</div>
+    </div>
+
+    <div class="panel">
+      <h3>Ringkasan Usaha</h3>
+      <p>Total pendapatan: <strong class="green" id="incomeTotal">Rp0</strong></p>
+      <p>Total biaya tercatat: <strong class="red" id="costSummary">Rp0</strong></p>
+      <p>Selisih pendapatan dan biaya: <strong id="profitTotal">Rp0</strong></p>
+      <div class="notice">
+        Selisih ini belum tentu keuntungan bersih. Hanya biaya yang sudah dicatat yang dihitung.
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="pengaturan">
+    <div class="section-title">
+      <h2>⚙️ Pengaturan</h2>
+    </div>
+
+    <div class="panel">
+      <h3>Tentang Petani-Cabai</h3>
+      <p>Aplikasi pendamping budidaya cabai untuk membantu pencatatan kebun, perawatan, dan hasil panen.</p>
+      <p><strong>Versi:</strong> 0.1.0 (Prototipe awal)</p>
+      <p><strong>Penyimpanan:</strong> Browser pada perangkat ini.</p>
+    </div>
+
+    <div class="notice">
+      Data versi awal disimpan secara lokal. Data belum disinkronkan ke server atau akun online. Jangan menghapus data browser sebelum membuat cadangan jika catatan penting sudah dimasukkan.
+    </div>
+
+    <div class="panel">
+      <h3>Ekspor Cadangan Data</h3>
+      <p>Unduh salinan data aplikasi dalam format JSON.</p>
+      <button class="btn btn-secondary" onclick="exportData()">Unduh Cadangan Data</button>
+    </div>
+  </section>
+
+</main>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-page="dashboard" onclick="showPage('dashboard')">
+    <span>🏠</span>Beranda
+  </button>
+
+  <button class="nav-btn" data-page="budidaya" onclick="showPage('budidaya')">
+    <span>🌱</span>Budidaya
+  </button>
+
+  <button class="nav-btn" data-page="kebun" onclick="showPage('kebun')">
+    <span>🌾</span>Kebun
+  </button>
+
+  <button class="nav-btn" data-page="diagnosis" onclick="showPage('diagnosis')">
+    <span>🔬</span>Diagnosis
+  </button>
+
+  <button class="nav-btn" data-page="pengaturan" onclick="showPage('pengaturan')">
+    <span>⚙️</span>Lainnya
+  </button>
+</nav>
+
+<script>
+  const KEY = "petaniCabaiDataV1";
+
+  const defaultData = {
+    farms: [],
+    care: [],
+    diagnoses: [],
+    expenses: [],
+    harvests: []
+  };
+
+  function loadData() {
+    try {
+      const saved = localStorage.getItem(KEY);
+      if (!saved) return structuredCopy(defaultData);
+
+      const parsed = JSON.parse(saved);
+
+      return {
+        farms: Array.isArray(parsed.farms) ? parsed.farms : [],
+        care: Array.isArray(parsed.care) ? parsed.care : [],
+        diagnoses: Array.isArray(parsed.diagnoses) ? parsed.diagnoses : [],
+        expenses: Array.isArray(parsed.expenses) ? parsed.expenses : [],
+        harvests: Array.isArray(parsed.harvests) ? parsed.harvests : []
+      };
+    } catch (error) {
+      return structuredCopy(defaultData);
+    }
+  }
+
+  function structuredCopy(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  let data = loadData();
+
+  function saveData() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(data));
+      renderAll();
+      return true;
+    } catch (error) {
+      alert("Data gagal disimpan. Periksa ruang penyimpanan browser.");
+      return false;
+    }
+  }
+
+  function el(id) {
+    return document.getElementById(id);
+  }
+
+  function safe(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[char]);
+  }
+
+  function rupiah(value) {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      maximumFractionDigits: 0
+    }).format(value || 0);
+  }
+
+  function showPage(id) {
+    document.querySelectorAll(".page").forEach(page => {
+      page.classList.toggle("active", page.id === id);
+    });
+
+    document.querySelectorAll(".nav-btn").forEach(button => {
+      button.classList.toggle("active", button.dataset.page === id);
+    });
+
+    window.scrollTo(0, 0);
+  }
+
+  function renderList(id, items, template, emptyText) {
+    const target = el(id);
+
+    if (!items.length) {
+      target.innerHTML = '<div class="empty">' + safe(emptyText) + '</div>';
+      return;
+    }
+
+    target.innerHTML = items.map(template).join("");
+  }
+
+  function renderAll() {
+    const totalPlants = data.farms.reduce(
+      (sum, farm) => sum + Number(farm.amount || 0), 0
+    );
+
+    const totalExpenses = data.expenses.reduce(
+      (sum, item) => sum + Number(item.amount || 0), 0
+    );
+
+    const totalHarvest = data.harvests.reduce(
+      (sum, item) => sum + Number(item.weight || 0), 0
+    );
+
+    const totalIncome = data.harvests.reduce(
+      (sum, item) => sum + Number(item.weight || 0) * Number(item.price || 0), 0
+    );
+
+    el("plantCount").textContent = totalPlants.toLocaleString("id-ID");
+    el("recordCount").textContent =
+      data.care.length + data.diagnoses.length;
+
+    el("expenseTotal").textContent = rupiah(totalExpenses);
+    el("harvestTotal").textContent =
+      totalHarvest.toLocaleString("id-ID") + " kg";
+
+    el("incomeTotal").textContent = rupiah(totalIncome);
+    el("costSummary").textContent = rupiah(totalExpenses);
+    el("profitTotal").textContent = rupiah(totalIncome - totalExpenses);
+
+    renderList("farmList", data.farms, farm => {
+      const days = Math.max(
+        0,
+        Math.floor((Date.now() - new Date(farm.date + "T00:00:00").getTime()) / 86400000)
+      );
+
+      return `
+        <div class="item-row">
+          <strong>${safe(farm.name)}</strong>
+          <small>${safe(farm.variety)} · ${Number(farm.amount).toLocaleString("id-ID")} tanaman</small>
+          <small>Ditanam: ${safe(farm.date)} · ${days} hari sejak tanam</small>
+          <button class="btn btn-secondary" onclick="deleteItem('farms','${farm.id}')">Hapus data</button>
+        </div>`;
+    }, "Belum ada data kebun.");
+
+    renderList("careList", data.care, item => `
+      <div class="item-row">
+        <strong>${safe(item.type)}</strong>
+        <small>${safe(item.date)}</small>
+        <p>${safe(item.notes)}</p>
+        <button class="btn btn-secondary" onclick="deleteItem('care','${item.id}')">Hapus catatan</button>
+      </div>
+    `, "Belum ada catatan perawatan.");
+
+    renderList("diagnosisList", data.diagnoses, item => `
+      <div class="item-row">
+        <strong>${safe(item.part)}: ${safe(item.symptom)}</strong>
+        <small>${safe(item.date)}</small>
+        <p>${safe(item.notes || "Tidak ada keterangan tambahan.")}</p>
+        <button class="btn btn-secondary" onclick="deleteItem('diagnoses','${item.id}')">Hapus pemeriksaan</button>
+      </div>
+    `, "Belum ada pemeriksaan.");
+
+    renderList("expenseList", data.expenses, item => `
+      <div class="item-row">
+        <strong>${safe(item.name)}</strong>
+        <small>${safe(item.date)}</small>
+        <p class="red"><strong>${rupiah(item.amount)}</strong></p>
+        <button class="btn btn-secondary" onclick="deleteItem('expenses','${item.id}')">Hapus pengeluaran</button>
+      </div>
+    `, "Belum ada pengeluaran.");
+
+    renderList("harvestList", data.harvests, item => `
+      <div class="item-row">
+        <strong>Panen ${Number(item.weight).toLocaleString("id-ID")} kg</strong>
+        <small>${safe(item.date)}</small>
+        <p>Harga per kg: ${rupiah(item.price)}</p>
+        <p class="green"><strong>Pendapatan: ${rupiah(item.weight * item.price)}</strong></p>
+        <button class="btn btn-secondary" onclick="deleteItem('harvests','${item.id}')">Hapus catatan</button>
+      </div>
+    `, "Belum ada hasil panen.");
+  }
+
+  function deleteItem(collection, id) {
+    if (!confirm("Yakin ingin menghapus catatan ini?")) return;
+
+    data[collection] = data[collection].filter(item => item.id !== id);
+    saveData();
+  }
+
+  function makeId() {
+    return Date.now().toString(36) +
+      Math.random().toString(36).slice(2, 8);
+  }
+
+  function today() {
+    const date = new Date();
+    const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+    return local.toISOString().slice(0, 10);
+  }
+
+  el("plantDate").value = today();
+  el("careDate").value = today();
+  el("expenseDate").value = today();
+  el("harvestDate").value = today();
+
+  el("today").textContent = new Date().toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "short",
+    year: "numeric"
+  });
+
+  el("plantForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    data.farms.unshift({
+      id: makeId(),
+      name: el("farmName").value.trim(),
+      variety: el("variety").value,
+      date: el("plantDate").value,
+      amount: Number(el("plantAmount").value)
+    });
+
+    if (saveData()) {
+      event.target.reset();
+      el("plantDate").value = today();
+      showPage("kebun");
+      alert("Data kebun berhasil disimpan!");
+    }
+  });
+
+  el("careForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    data.care.unshift({
+      id: makeId(),
+      type: el("careType").value,
+      date: el("careDate").value,
+      notes: el("careNotes").value.trim()
+    });
+
+    if (saveData()) {
+      event.target.reset();
+      el("careDate").value = today();
+      alert("Catatan perawatan berhasil disimpan!");
+    }
+  });
+
+  el("diagnosisForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    data.diagnoses.unshift({
+      id: makeId(),
+      part: el("plantPart").value,
+      symptom: el("symptom").value,
+      notes: el("symptomNotes").value.trim(),
+      date: today()
+    });
+
+    if (saveData()) {
+      event.target.reset();
+      alert("Pemeriksaan berhasil dicatat. Ini belum merupakan diagnosis otomatis.");
+    }
+  });
+
+  el("expenseForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    data.expenses.unshift({
+      id: makeId(),
+      name: el("expenseName").value.trim(),
+      amount: Number(el("expenseAmount").value),
+      date: el("expenseDate").value
+    });
+
+    if (saveData()) {
+      event.target.reset();
+      el("expenseDate").value = today();
+      alert("Pengeluaran berhasil dicatat!");
+    }
+  });
+
+  el("harvestForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    data.harvests.unshift({
+      id: makeId(),
+      date: el("harvestDate").value,
+      weight: Number(el("harvestWeight").value),
+      price: Number(el("harvestPrice").value)
+    });
+
+    if (saveData()) {
+      event.target.reset();
+      el("harvestDate").value = today();
+      alert("Hasil panen berhasil dicatat!");
+    }
+  });
+
+  function exportData() {
+    const file = new Blob(
+      [JSON.stringify(data, null, 2)],
+      { type: "application/json" }
+    );
+
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "cadangan-petani-cabai.json";
+    link.click();
+
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  renderAll();
+</script>
+
+</body>
+</html>
