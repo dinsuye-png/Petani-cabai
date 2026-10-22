@@ -13,6 +13,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
+import android.webkit.ConsoleMessage;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,14 +23,18 @@ import android.widget.ProgressBar;
 
 public class MainActivity extends Activity {
 
+    private static final String TAG = "PetaniCabai";
+
+    private static final String APP_URL =
+            "https://dinsuye-png.github.io/Petani-cabai/";
+
     private WebView webView;
     private FrameLayout root;
     private LinearLayout errorLayout;
     private ProgressBar progressBar;
     private TextView errorMessage;
 
-    private static final String APP_URL =
-            "https://dinsuye-png.github.io/Petani-cabai/";
+    private boolean mainPageFailed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,23 +43,24 @@ public class MainActivity extends Activity {
         root = new FrameLayout(this);
         root.setBackgroundColor(Color.WHITE);
 
-        // WebView menjadi tampilan utama.
         webView = new WebView(this);
 
-        FrameLayout.LayoutParams webParams =
+        root.addView(
+                webView,
                 new FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT
-                );
+                )
+        );
 
-        root.addView(webView, webParams);
-
-        // Indikator pemuatan halaman.
         progressBar = new ProgressBar(
                 this,
                 null,
                 android.R.attr.progressBarStyleHorizontal
         );
+
+        progressBar.setMax(100);
+        progressBar.setProgress(0);
 
         FrameLayout.LayoutParams progressParams =
                 new FrameLayout.LayoutParams(
@@ -64,7 +71,6 @@ public class MainActivity extends Activity {
 
         root.addView(progressBar, progressParams);
 
-        // Tampilan jika halaman utama gagal dimuat.
         errorLayout = new LinearLayout(this);
         errorLayout.setOrientation(LinearLayout.VERTICAL);
         errorLayout.setGravity(Gravity.CENTER);
@@ -73,20 +79,20 @@ public class MainActivity extends Activity {
         errorLayout.setVisibility(View.GONE);
 
         TextView title = new TextView(this);
-        title.setText("🌶️ Petani-Cabai");
+        title.setText("Petani-Cabai");
         title.setTextColor(Color.rgb(40, 130, 55));
-        title.setTextSize(26);
+        title.setTextSize(27);
         title.setGravity(Gravity.CENTER);
 
         errorMessage = new TextView(this);
-        errorMessage.setText(
-                "Halaman belum dapat dimuat.\n" +
-                "Periksa koneksi internet dan coba lagi."
-        );
         errorMessage.setTextColor(Color.DKGRAY);
         errorMessage.setTextSize(16);
         errorMessage.setGravity(Gravity.CENTER);
         errorMessage.setPadding(0, 24, 0, 24);
+        errorMessage.setText(
+                "Halaman belum dapat dimuat.\n" +
+                "Periksa koneksi internet dan coba lagi."
+        );
 
         Button retry = new Button(this);
         retry.setText("Coba Lagi");
@@ -96,17 +102,16 @@ public class MainActivity extends Activity {
         errorLayout.addView(errorMessage);
         errorLayout.addView(retry);
 
-        FrameLayout.LayoutParams errorParams =
+        root.addView(
+                errorLayout,
                 new FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT
-                );
-
-        root.addView(errorLayout, errorParams);
+                )
+        );
 
         setContentView(root);
 
-        // Konfigurasi WebView.
         WebSettings settings = webView.getSettings();
 
         settings.setJavaScriptEnabled(true);
@@ -115,42 +120,137 @@ public class MainActivity extends Activity {
         settings.setUseWideViewPort(true);
         settings.setSupportZoom(false);
 
+        // Catat error JavaScript dan progres pemuatan.
         webView.setWebChromeClient(new WebChromeClient() {
 
-    @Override
-    public boolean onConsoleMessage(
-            android.webkit.ConsoleMessage consoleMessage
-    ) {
-        android.util.Log.e(
-                "PetaniCabai",
-                "Web error: " + consoleMessage.message()
-                + " | Baris: " + consoleMessage.lineNumber()
-                + " | Sumber: " + consoleMessage.sourceId()
-        );
+            @Override
+            public boolean onConsoleMessage(
+                    ConsoleMessage message
+            ) {
+                Log.e(
+                        TAG,
+                        "JavaScript: " + message.message()
+                        + " | Baris: " + message.lineNumber()
+                        + " | Sumber: " + message.sourceId()
+                );
 
-        return true;
-    }
+                return true;
+            }
 
-    @Override
-    public void onProgressChanged(
-            WebView view,
-            int newProgress
-    ) {
-        super.onProgressChanged(view, newProgress);
+            @Override
+            public void onProgressChanged(
+                    WebView view,
+                    int newProgress
+            ) {
+                progressBar.setProgress(newProgress);
 
-        android.util.Log.d(
-                "PetaniCabai",
-                "Progress pemuatan: " + newProgress + "%"
-        );
-    }
-});
+                if (newProgress < 100) {
+                    progressBar.setVisibility(View.VISIBLE);
+                } else {
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+        });
 
-        // Pulihkan halaman jika memungkinkan.
-        // Jika pemulihan gagal, muat URL utama.
+        // PENTING: pasang WebViewClient.
+        webView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public void onPageStarted(
+                    WebView view,
+                    String url,
+                    android.graphics.Bitmap favicon
+            ) {
+                super.onPageStarted(view, url, favicon);
+
+                Log.d(TAG, "Mulai memuat: " + url);
+
+                mainPageFailed = false;
+
+                errorLayout.setVisibility(View.GONE);
+                webView.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+                progressBar.setProgress(0);
+            }
+
+            @Override
+            public void onPageFinished(
+                    WebView view,
+                    String url
+            ) {
+                super.onPageFinished(view, url);
+
+                Log.d(TAG, "Selesai memuat: " + url);
+
+                progressBar.setVisibility(View.GONE);
+
+                if (!mainPageFailed) {
+                    webView.setVisibility(View.VISIBLE);
+                    errorLayout.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onReceivedError(
+                    WebView view,
+                    WebResourceRequest request,
+                    WebResourceError error
+            ) {
+                super.onReceivedError(view, request, error);
+
+                if (request.isForMainFrame()) {
+                    Log.e(
+                            TAG,
+                            "Gagal memuat halaman: "
+                            + error.getDescription()
+                            + " | Kode: "
+                            + error.getErrorCode()
+                    );
+
+                    showError(
+                            "Halaman gagal dimuat.\n\n"
+                            + error.getDescription()
+                            + "\n\nPeriksa koneksi internet."
+                    );
+                }
+            }
+
+            @Override
+            public void onReceivedHttpError(
+                    WebView view,
+                    WebResourceRequest request,
+                    WebResourceResponse response
+            ) {
+                super.onReceivedHttpError(
+                        view, request, response
+                );
+
+                if (request.isForMainFrame()) {
+                    int status = response.getStatusCode();
+
+                    Log.e(
+                            TAG,
+                            "HTTP error: " + status
+                            + " | URL: " + request.getUrl()
+                    );
+
+                    if (status >= 400) {
+                        showError(
+                                "Server gagal menampilkan halaman.\n\n"
+                                + "Kode HTTP: " + status
+                                + "\nSilakan coba lagi."
+                        );
+                    }
+                }
+            }
+        });
+
+        // Pulihkan halaman hanya jika benar-benar berhasil.
         boolean restored = false;
 
         if (savedInstanceState != null) {
-            restored = webView.restoreState(savedInstanceState) != null;
+            restored =
+                    webView.restoreState(savedInstanceState) != null;
         }
 
         if (!restored) {
@@ -159,16 +259,24 @@ public class MainActivity extends Activity {
     }
 
     private void loadApp() {
+        mainPageFailed = false;
+
         errorLayout.setVisibility(View.GONE);
         webView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
+        progressBar.setProgress(0);
+
+        Log.d(TAG, "Memuat URL aplikasi: " + APP_URL);
 
         webView.loadUrl(APP_URL);
     }
 
     private void showError(String message) {
+        mainPageFailed = true;
+
         progressBar.setVisibility(View.GONE);
         webView.setVisibility(View.GONE);
+
         errorMessage.setText(message);
         errorLayout.setVisibility(View.VISIBLE);
     }
