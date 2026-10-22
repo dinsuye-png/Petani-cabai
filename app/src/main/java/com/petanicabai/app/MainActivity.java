@@ -115,70 +115,35 @@ public class MainActivity extends Activity {
         settings.setUseWideViewPort(true);
         settings.setSupportZoom(false);
 
-        webView.setWebChromeClient(new WebChromeClient());
+        webView.setWebChromeClient(new WebChromeClient() {
 
-        webView.setWebViewClient(new WebViewClient() {
+    @Override
+    public boolean onConsoleMessage(
+            android.webkit.ConsoleMessage consoleMessage
+    ) {
+        android.util.Log.e(
+                "PetaniCabai",
+                "Web error: " + consoleMessage.message()
+                + " | Baris: " + consoleMessage.lineNumber()
+                + " | Sumber: " + consoleMessage.sourceId()
+        );
 
-            @Override
-            public void onPageStarted(
-                    WebView view,
-                    String url,
-                    android.graphics.Bitmap favicon
-            ) {
-                super.onPageStarted(view, url, favicon);
+        return true;
+    }
 
-                progressBar.setVisibility(View.VISIBLE);
-                errorLayout.setVisibility(View.GONE);
-                webView.setVisibility(View.VISIBLE);
-            }
+    @Override
+    public void onProgressChanged(
+            WebView view,
+            int newProgress
+    ) {
+        super.onProgressChanged(view, newProgress);
 
-            @Override
-            public void onPageFinished(
-                    WebView view,
-                    String url
-            ) {
-                super.onPageFinished(view, url);
-
-                progressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onReceivedError(
-                    WebView view,
-                    WebResourceRequest request,
-                    WebResourceError error
-            ) {
-                super.onReceivedError(view, request, error);
-
-                if (request.isForMainFrame()) {
-                    showError(
-                            "Halaman utama gagal dimuat.\n" +
-                            "Periksa koneksi internet, lalu coba lagi."
-                    );
-                }
-            }
-
-            @Override
-            public void onReceivedHttpError(
-                    WebView view,
-                    WebResourceRequest request,
-                    WebResourceResponse response
-            ) {
-                super.onReceivedHttpError(
-                        view, request, response
-                );
-
-                if (request.isForMainFrame()
-                        && response.getStatusCode() >= 400) {
-
-                    showError(
-                            "Server mengembalikan HTTP " +
-                            response.getStatusCode() +
-                            ". Coba beberapa saat lagi."
-                    );
-                }
-            }
-        });
+        android.util.Log.d(
+                "PetaniCabai",
+                "Progress pemuatan: " + newProgress + "%"
+        );
+    }
+});
 
         // Pulihkan halaman jika memungkinkan.
         // Jika pemulihan gagal, muat URL utama.
